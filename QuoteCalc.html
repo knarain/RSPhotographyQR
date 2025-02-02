@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RS Photography Quotation Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RS Photography Quotation Calculator</h1>
+        <div class="form-group">
+            <input type="checkbox" id="traditionalPhotographyCheck">
+            <label for="traditionalPhotographyCheck">Traditional Photography</label>
+            <input type="hidden" id="traditionalPhotography" value="6000">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="traditionalVideographyCheck">
+            <label for="traditionalVideographyCheck">Traditional Videography</label>
+            <input type="hidden" id="traditionalVideography" value="6000">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="candidPhotographyCheck">
+            <label for="candidPhotographyCheck">Candid Photography</label>
+            <input type="hidden" id="candidPhotography" value="10000">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="cinematicVideographyCheck">
+            <label for="cinematicVideographyCheck">Cinematic Videography</label>
+            <input type="hidden" id="cinematicVideography" value="15000">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="led1Check">
+            <label for="led1Check">LED 8x6</label>
+            <input type="hidden" id="led1" value="8000">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="led2Check">
+            <label for="led2Check">LED 8x12</label>
+            <input type="hidden" id="led2" value="16000">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="qrLivePhotoshareCheck">
+            <label for="qrLivePhotoshareCheck">QR Live Photoshare</label>
+            <input type="hidden" id="qrLivePhotoshare" value="5000">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="liveStreamingCheck">
+            <label for="liveStreamingCheck">Live Streaming</label>
+            <input type="hidden" id="liveStreaming" value="5000">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="photoBoothCheck">
+            <label for="photoBoothCheck">Photobooth</label>
+            <input type="hidden" id="photoBooth" value="5000">
+        </div>
+        <button onclick="calculateQuotation()">Calculate Quotation</button>
+        <button onclick="resetForm()">Reset</button>
+        <button onclick="generatePDF()">Generate PDF</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateQuotation() {
+            const services = [
+                { check: 'traditionalPhotographyCheck', value: 'traditionalPhotography' },
+                { check: 'traditionalVideographyCheck', value: 'traditionalVideography' },
+                { check: 'candidPhotographyCheck', value: 'candidPhotography' },
+                { check: 'cinematicVideographyCheck', value: 'cinematicVideography' },
+                { check: 'led1Check', value: 'led1' },
+                { check: 'led2Check', value: 'led2' },
+                { check: 'qrLivePhotoshareCheck', value: 'qrLivePhotoshare' },
+                { check: 'liveStreamingCheck', value: 'liveStreaming' },
+                { check: 'photoBoothCheck', value: 'photoBooth' }
+            ];
+
+            let total = 0;
+            services.forEach(service => {
+                if (document.getElementById(service.check).checked) {
+                    total += parseFloat(document.getElementById(service.value).value);
+                }
+            });
+
+            document.getElementById('result').innerText = `Total Quotation: ₹${total.toFixed(2)}`;
+        }
+
+        function resetForm() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            document.getElementById('result').innerText = '';
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const services = [
+                { check: 'traditionalPhotographyCheck', label: 'Traditional Photography', value: 'traditionalPhotography' },
+                { check: 'traditionalVideographyCheck', label: 'Traditional Videography', value: 'traditionalVideography' },
+                { check: 'candidPhotographyCheck', label: 'Candid Photography', value: 'candidPhotography' },
+                { check: 'cinematicVideographyCheck', label: 'Cinematic Videography', value: 'cinematicVideography' },
+                { check: 'led1Check', label: 'LED 8x6', value: 'led1' },
+                { check: 'led2Check', label: 'LED 8x12', value: 'led2' },
+                { check: 'qrLivePhotoshareCheck', label: 'QR Live Photoshare', value: 'qrLivePhotoshare' },
+                { check: 'liveStreamingCheck', label: 'Live Streaming', value: 'liveStreaming' },
+                { check: 'photoBoothCheck', label: 'Photobooth', value: 'photoBooth' }
+            ];
+
+            let y = 30;
+            doc.text('Photography Quotation', 10, 10);
+            doc.text('----------------------', 10, 20);
+            services.forEach(service => {
+                if (document.getElementById(service.check).checked) {
+                    doc.text(`${service.label}: ₹${document.getElementById(service.value).value}`, 10, y);
+                    y += 10;
+                }
+            });
+
+            const total = document.getElementById('result').innerText;
+            doc.text(total, 10, y + 10);
+            doc.text('----------------------', 10, y + 20);
+            doc.text('Thank you for choosing RS Photography!', 10, y + 30);
+
+            doc.save('quotation.pdf');
+        }
+    </script>
+</body>
+</html>
