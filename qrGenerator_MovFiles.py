@@ -1,32 +1,4 @@
-
 import os
-"""
-This script provides a GUI application for generating QR codes and moving files.
-Modules:
-    os: Provides a way of using operating system dependent functionality.
-    glob: Finds all the pathnames matching a specified pattern.
-    shutil: Offers a number of high-level operations on files and collections of files.
-    tkinter: Provides a GUI toolkit for Python.
-    qrcode: A library to generate QR codes.
-    PIL (Pillow): Python Imaging Library to open, manipulate, and save image files.
-Functions:
-    generate_qr_code(): Generates a QR code based on user input and saves it to a file.
-    select_source_folder(): Opens a dialog to select a source folder and updates the entry field.
-    move_files(): Moves files from the source folder to a specified destination folder based on file format.
-    show_qr_code_generator(): Displays the QR code generator frame.
-    show_file_mover(): Displays the file mover frame.
-    set_manual_format(*args): Enables or disables the manual format entry based on the selected file format.
-GUI Components:
-    root: The main window of the application.
-    menu_bar: The main menu bar.
-    qr_menu: Submenu for QR code generator.
-    file_menu: Submenu for file mover.
-    qr_code_frame: Frame containing widgets for QR code generation.
-    file_mover_frame: Frame containing widgets for file moving functionality.
-    color_palettes: Dictionary of color palettes for QR code generation.
-    status_label: Label to display status messages.
-    progress_bar: Progress bar to show file moving progress.
-"""
 import glob
 import shutil
 import tkinter as tk
@@ -84,9 +56,12 @@ def move_files():
     destination = os.path.join(source, folder_name)
     os.makedirs(destination, exist_ok=True)
 
+    allfiles = glob.glob(os.path.join(source, f"*{file_format}"))
     if not allfiles:
         status_label.config(text="No files found with the specified format.", fg="red")
-        return num_files = len(allfiles)
+        return
+
+    num_files = len(allfiles)
     progress_step = 100 / num_files
 
     progress_bar['value'] = 0
@@ -142,15 +117,15 @@ menu_bar.add_cascade(label="File Mover", menu=file_menu)
 file_menu.add_command(label="Move Files", command=show_file_mover)
 
 # QR Code Generator widgets
-qr_code_frame = tk.Frame(root)
+qr_code_frame = ttk.Frame(root, padding="10")
 
-label_data = tk.Label(qr_code_frame, text="Enter data for QR code:")
+label_data = ttk.Label(qr_code_frame, text="Enter data for QR code:")
 label_data.grid(row=0, column=0, padx=10, pady=5, sticky="w")
 
-entry_data = tk.Entry(qr_code_frame, width=50)
+entry_data = ttk.Entry(qr_code_frame, width=50)
 entry_data.grid(row=0, column=1, columnspan=2, padx=10, pady=5)
 
-label_palette = tk.Label(qr_code_frame, text="Select Color Palette:")
+label_palette = ttk.Label(qr_code_frame, text="Select Color Palette:")
 label_palette.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
 palette_combobox = ttk.Combobox(qr_code_frame, values=list(color_palettes.keys()), state="readonly")
@@ -160,28 +135,28 @@ palette_combobox.grid(row=1, column=1, columnspan=2, padx=10, pady=5, sticky="ew
 with_image_var = tk.BooleanVar()
 with_image_var.set(False)
 
-with_image_check = tk.Checkbutton(qr_code_frame, text="Embed Image", variable=with_image_var)
+with_image_check = ttk.Checkbutton(qr_code_frame, text="Embed Image", variable=with_image_var)
 with_image_check.grid(row=2, column=0, columnspan=3, padx=10, pady=5, sticky="n")
 
-button_generate = tk.Button(qr_code_frame, text="Generate QR Code", command=generate_qr_code, width=15, height=2)
+button_generate = ttk.Button(qr_code_frame, text="Generate QR Code", command=generate_qr_code)
 button_generate.grid(row=3, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
 # File Mover widgets
-file_mover_frame = tk.Frame(root)
+file_mover_frame = ttk.Frame(root, padding="10")
 
-source_label = tk.Label(file_mover_frame, text="Source Path:")
+source_label = ttk.Label(file_mover_frame, text="Source Path:")
 source_label.grid(row=0, column=0, padx=10, pady=5, sticky="e")
-source_entry = tk.Entry(file_mover_frame, width=50)
+source_entry = ttk.Entry(file_mover_frame, width=50)
 source_entry.grid(row=0, column=1, padx=10, pady=5)
-source_button = tk.Button(file_mover_frame, text="Browse", command=select_source_folder)
+source_button = ttk.Button(file_mover_frame, text="Browse", command=select_source_folder)
 source_button.grid(row=0, column=2, padx=5, pady=5)
 
-folder_name_label = tk.Label(file_mover_frame, text="Folder Name:")
+folder_name_label = ttk.Label(file_mover_frame, text="Folder Name:")
 folder_name_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
-folder_name_entry = tk.Entry(file_mover_frame, width=50)
+folder_name_entry = ttk.Entry(file_mover_frame, width=50)
 folder_name_entry.grid(row=1, column=1, padx=10, pady=5)
 
-file_format_label = tk.Label(file_mover_frame, text="File Format:")
+file_format_label = ttk.Label(file_mover_frame, text="File Format:")
 file_format_label.grid(row=2, column=0, padx=10, pady=5, sticky="e")
 file_format_var = tk.StringVar(file_mover_frame)
 file_format_combobox = ttk.Combobox(file_mover_frame, textvariable=file_format_var, width=20, state="readonly")
@@ -189,9 +164,9 @@ file_format_combobox['values'] = (".ARW", ".JPG", ".PNG", ".JPEG", ".TIFF", "Oth
 file_format_combobox.grid(row=2, column=1, padx=10, pady=5)
 file_format_combobox.current(0)
 
-manual_format_label = tk.Label(file_mover_frame, text="Manual Format:")
+manual_format_label = ttk.Label(file_mover_frame, text="Manual Format:")
 manual_format_label.grid(row=3, column=0, padx=10, pady=5, sticky="e")
-manual_format_entry = tk.Entry(file_mover_frame, width=20)
+manual_format_entry = ttk.Entry(file_mover_frame, width=20)
 manual_format_entry.grid(row=3, column=1, padx=10, pady=5)
 
 def set_manual_format(*args):
@@ -203,19 +178,19 @@ def set_manual_format(*args):
 
 file_format_var.trace_add("write", set_manual_format)
 
-move_button = tk.Button(file_mover_frame, text="Move Files", command=move_files)
+move_button = ttk.Button(file_mover_frame, text="Move Files", command=move_files)
 move_button.grid(row=4, column=0, columnspan=2, pady=10)
 
-progress_frame = tk.Frame(file_mover_frame)
+progress_frame = ttk.Frame(file_mover_frame)
 progress_frame.grid(row=5, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
-progress_label = tk.Label(progress_frame, text="Progress:")
+progress_label = ttk.Label(progress_frame, text="Progress:")
 progress_label.pack(side="left")
 
 progress_bar = ttk.Progressbar(progress_frame, orient="horizontal", mode="determinate")
 progress_bar.pack(side="right", fill="x", expand=True)
 
-status_label = tk.Label(file_mover_frame, text="", fg="green")
+status_label = ttk.Label(file_mover_frame, text="", foreground="green")
 status_label.grid(row=6, column=0, columnspan=3, padx=10, pady=5)
 
 # Initially hide file mover frame
