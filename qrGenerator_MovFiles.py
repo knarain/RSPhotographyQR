@@ -83,12 +83,10 @@ def move_files():
 
     destination = os.path.join(source, folder_name)
     os.makedirs(destination, exist_ok=True)
-    allfiles = glob.glob(os.path.join(source, f'*{file_format}'))
+
     if not allfiles:
         status_label.config(text="No files found with the specified format.", fg="red")
-        return
-
-    num_files = len(allfiles)
+        return num_files = len(allfiles)
     progress_step = 100 / num_files
 
     progress_bar['value'] = 0
