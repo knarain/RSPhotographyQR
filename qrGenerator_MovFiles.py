@@ -39,13 +39,13 @@ def generate_qr_code():
             file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
             if file_path:
                 img.save(file_path)
-                status_label.config(text="QR code generated successfully!", fg="green")
+                status_label.config(text="QR code generated successfully!", foreground="green")
             else:
-                status_label.config(text="QR code generation canceled", fg="red")
+                status_label.config(text="QR code generation canceled", foreground="red")
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {e}")
     else:
-        status_label.config(text="Please enter data for QR code generation", fg="red")
+        status_label.config(text="Please enter data for QR code generation", foreground="red")
 
 # Function to select source folder for file moving
 def select_source_folder():
@@ -69,7 +69,7 @@ def move_files():
 
     allfiles = glob.glob(os.path.join(source, f"*{file_format}"))
     if not allfiles:
-        status_label.config(text="No files found with the specified format.", fg="red")
+        status_label.config(text="No files found with the specified format.", foreground="red")
         return
 
     num_files = len(allfiles)
