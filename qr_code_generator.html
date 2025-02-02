@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"], select {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #qrcode {
+            margin-top: 20px;
+        }
+        #loading {
+            display: none;
+            margin-top: 20px;
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="font-family: 'Courier New', Courier, monospace;">RS Photography QR Code Generator</h1>
+    <input type="text" id="text" placeholder="Enter text to generate QR code">
+    <select id="foregroundColor" title="Foreground Color">
+        <option value="#000000">Black</option>
+        <option value="#ff0000">Red</option>
+        <option value="#00ff00">Green</option>
+        <option value="#0000ff">Blue</option>
+        <option value="#ffff00">Yellow</option>
+        <option value="#ff00ff">Magenta</option>
+        <option value="#00ffff">Cyan</option>
+        <option value="#800080">Purple</option>
+        <option value="#ffa500">Orange</option>
+        <option value="#808080">Gray</option>
+    </select>
+    <select id="backgroundColor" title="Background Color">
+        <option value="#ffffff">White</option>
+        <option value="#000000">Black</option>
+        <option value="#ff0000">Red</option>
+        <option value="#00ff00">Green</option>
+        <option value="#0000ff">Blue</option>
+        <option value="#ffff00">Yellow</option>
+        <option value="#ff00ff">Magenta</option>
+        <option value="#00ffff">Cyan</option>
+        <option value="#800080">Purple</option>
+        <option value="#ffa500">Orange</option>
+        <option value="#808080">Gray</option>
+    </select>
+    <button onclick="generateQRCode()">Generate QR Code</button>
+    <div id="error"></div>
+    <div id="loading">Generating QR code...</div>
+    <div id="qrcode"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        function generateQRCode() {
+            const text = document.getElementById('text').value;
+            const foregroundColor = document.getElementById('foregroundColor').value;
+            const backgroundColor = document.getElementById('backgroundColor').value;
+            const qrcodeContainer = document.getElementById('qrcode');
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+
+            qrcodeContainer.innerHTML = '';
+            error.textContent = '';
+
+            if (!text) {
+                error.textContent = 'Please enter text to generate QR code.';
+                return;
+            }
+
+            loading.style.display = 'block';
+
+            const canvas = document.createElement('canvas');
+            canvas.title = 'RS Photography';
+            qrcodeContainer.appendChild(canvas);
+
+            QRCode.toCanvas(canvas, text, {
+                width: 300,
+                color: {
+                    dark: foregroundColor,
+                    light: backgroundColor
+                }
+            }, function (err) {
+                loading.style.display = 'none';
+                if (err) {
+                    console.error(err);
+                    error.textContent = 'Failed to generate QR code.';
+                } else {
+                    console.log('QR code generated!');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
