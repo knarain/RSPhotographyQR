@@ -2,7 +2,7 @@ import os
 import glob
 import shutil
 import tkinter as tk
-from tkinter import filedialog, ttk
+from tkinter import filedialog, ttk, messagebox
 import qrcode
 from PIL import Image
 
@@ -10,37 +10,40 @@ from PIL import Image
 def generate_qr_code():
     data = entry_data.get()  # Get data from entry widget
     if data:
-        # Create QR code object
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(data)  # Add data to QR code
-        qr.make(fit=True)
-        
-        # Get selected color palette
-        selected_palette = color_palettes[palette_combobox.get()]
-        
-        # Create QR code image with selected colors
-        img = qr.make_image(fill_color=selected_palette[0], back_color=selected_palette[1])
-        
-        # Optionally embed an image in the QR code
-        if with_image_var.get():
-            image_file = filedialog.askopenfilename(filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.gif;*.bmp")])
-            if image_file:
-                image = Image.open(image_file)
-                image = image.resize((100, 100))
-                img.paste(image, (img.size[0] // 2 - 50, img.size[1] // 2 - 50))
-        
-        # Save the QR code image
-        file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
-        if file_path:
-            img.save(file_path)
-            status_label.config(text="QR code generated successfully!", fg="green")
-        else:
-            status_label.config(text="QR code generation canceled", fg="red")
+        try:
+            # Create QR code object
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=4,
+            )
+            qr.add_data(data)  # Add data to QR code
+            qr.make(fit=True)
+            
+            # Get selected color palette
+            selected_palette = color_palettes[palette_combobox.get()]
+            
+            # Create QR code image with selected colors
+            img = qr.make_image(fill_color=selected_palette[0], back_color=selected_palette[1])
+            
+            # Optionally embed an image in the QR code
+            if with_image_var.get():
+                image_file = filedialog.askopenfilename(filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.gif;*.bmp")])
+                if image_file:
+                    image = Image.open(image_file)
+                    image = image.resize((100, 100))
+                    img.paste(image, (img.size[0] // 2 - 50, img.size[1] // 2 - 50))
+            
+            # Save the QR code image
+            file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
+            if file_path:
+                img.save(file_path)
+                status_label.config(text="QR code generated successfully!", fg="green")
+            else:
+                status_label.config(text="QR code generation canceled", fg="red")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
     else:
         status_label.config(text="Please enter data for QR code generation", fg="red")
 
@@ -74,12 +77,15 @@ def move_files():
 
     progress_bar['value'] = 0
     for idx, file_path in enumerate(allfiles, start=1):
-        file_name = os.path.splitext(os.path.basename(file_path))[0]
-        dst_path = os.path.join(destination, f'{file_name}.{file_format[1:]}')
-        shutil.move(file_path, dst_path)
-        status_label.config(text=f"Moved {file_path} -> {dst_path}")
-        progress_bar['value'] = idx * progress_step
-        root.update()
+        try:
+            file_name = os.path.splitext(os.path.basename(file_path))[0]
+            dst_path = os.path.join(destination, f'{file_name}.{file_format[1:]}')
+            shutil.move(file_path, dst_path)
+            status_label.config(text=f"Moved {file_path} -> {dst_path}")
+            progress_bar['value'] = idx * progress_step
+            root.update()
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred while moving {file_path}: {e}")
 
 # Function to show QR code generator frame
 def show_qr_code_generator():
@@ -193,19 +199,19 @@ def set_manual_format(*args):
 file_format_var.trace_add("write", set_manual_format)
 
 move_button = ttk.Button(file_mover_frame, text="Move Files", command=move_files)
-move_button.grid(row=4, column=0, columnspan=2, pady=10)
+move_button.grid(row=4, column=0, columnspan=3, pady=10, sticky="ew")
 
 progress_frame = ttk.Frame(file_mover_frame)
 progress_frame.grid(row=5, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
 progress_label = ttk.Label(progress_frame, text="Progress:")
-progress_label.pack(side="left")
+progress_label.pack(side="left", padx=5)
 
 progress_bar = ttk.Progressbar(progress_frame, orient="horizontal", mode="determinate")
-progress_bar.pack(side="right", fill="x", expand=True)
+progress_bar.pack(side="left", fill="x", expand=True, padx=5)
 
 status_label = ttk.Label(file_mover_frame, text="", foreground="green")
-status_label.grid(row=6, column=0, columnspan=3, padx=10, pady=5)
+status_label.grid(row=6, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
 
 # Initially hide file mover frame
 file_mover_frame.grid_forget()
