@@ -10,10 +10,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            /*background-image: url('C:/codeBaseDevelopment/RSPhotographyQR/Logowhite.JPEG');*/
+            background-image: url('C:/codeBaseDevelopment/RSPhotographyQR/Logoblack.JPEG');
+            background-size: cover;
+            background-position: top;
+            background-color: rgba(0, 0, 0, 0.7); /* Black background with 50% transparency */
         }
         h1 {
             color: #333;
@@ -52,8 +56,9 @@
     </style>
 </head>
 <body>
-    <h1 style="font-family: 'Courier New', Courier, monospace;">RS Photography QR Code Generator</h1>
+    <h1 style="font-family: 'Courier New', Courier, monospace; color: white;">RS Photography QR Code Generator</h1>
     <input type="text" id="text" placeholder="Enter text to generate QR code">
+    <label for="foregroundColor" style="color: white;">Foreground Color:</label>
     <select id="foregroundColor" title="Foreground Color">
         <option value="#000000">Black</option>
         <option value="#ff0000">Red</option>
@@ -65,7 +70,9 @@
         <option value="#800080">Purple</option>
         <option value="#ffa500">Orange</option>
         <option value="#808080">Gray</option>
+        <option value="#ffffff">White</option>
     </select>
+    <label for="backgroundColor" style="color: white;">Background Color:</label>
     <select id="backgroundColor" title="Background Color">
         <option value="#ffffff">White</option>
         <option value="#000000">Black</option>
@@ -78,6 +85,7 @@
         <option value="#800080">Purple</option>
         <option value="#ffa500">Orange</option>
         <option value="#808080">Gray</option>
+    </select>
     </select>
     <button onclick="generateQRCode()">Generate QR Code</button>
     <div id="error"></div>
