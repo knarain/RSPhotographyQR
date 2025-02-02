@@ -1,8 +1,9 @@
 #This code move the raw photos from the camera to a folder called RAW
+#supprted extensions are .ARW .CR3 .PSD .JPG .PNG
 import os
 import glob
 import shutil
- 
+ # Source folder path
 source = r'I:\DCIM\100EOS_R'
 folder_name = 'RAW'
 
