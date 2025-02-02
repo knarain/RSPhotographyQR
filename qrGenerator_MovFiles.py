@@ -6,22 +6,27 @@ from tkinter import filedialog, ttk
 import qrcode
 from PIL import Image
 
+# Function to generate QR code
 def generate_qr_code():
-    data = entry_data.get()
+    data = entry_data.get()  # Get data from entry widget
     if data:
+        # Create QR code object
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
             box_size=10,
             border=4,
         )
-        qr.add_data(data)
+        qr.add_data(data)  # Add data to QR code
         qr.make(fit=True)
         
+        # Get selected color palette
         selected_palette = color_palettes[palette_combobox.get()]
         
+        # Create QR code image with selected colors
         img = qr.make_image(fill_color=selected_palette[0], back_color=selected_palette[1])
         
+        # Optionally embed an image in the QR code
         if with_image_var.get():
             image_file = filedialog.askopenfilename(filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.gif;*.bmp")])
             if image_file:
@@ -29,6 +34,7 @@ def generate_qr_code():
                 image = image.resize((100, 100))
                 img.paste(image, (img.size[0] // 2 - 50, img.size[1] // 2 - 50))
         
+        # Save the QR code image
         file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
         if file_path:
             img.save(file_path)
@@ -38,12 +44,14 @@ def generate_qr_code():
     else:
         status_label.config(text="Please enter data for QR code generation", fg="red")
 
+# Function to select source folder for file moving
 def select_source_folder():
     folder_selected = filedialog.askdirectory()
     if folder_selected:
         source_entry.delete(0, tk.END)
         source_entry.insert(0, folder_selected)
 
+# Function to move files from source to destination folder
 def move_files():
     source = source_entry.get()
     folder_name = folder_name_entry.get()
@@ -73,10 +81,12 @@ def move_files():
         progress_bar['value'] = idx * progress_step
         root.update()
 
+# Function to show QR code generator frame
 def show_qr_code_generator():
     qr_code_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
     file_mover_frame.grid_forget()
 
+# Function to show file mover frame
 def show_file_mover():
     qr_code_frame.grid_forget()
     file_mover_frame.grid(row=1, column=0, columnspan=3, padx=10, pady=5, sticky="ew")
@@ -169,6 +179,7 @@ manual_format_label.grid(row=3, column=0, padx=10, pady=5, sticky="e")
 manual_format_entry = ttk.Entry(file_mover_frame, width=20)
 manual_format_entry.grid(row=3, column=1, padx=10, pady=5)
 
+# Enable manual format entry if "Other" is selected
 def set_manual_format(*args):
     if file_format_var.get() == "Other":
         manual_format_entry.config(state="normal")
