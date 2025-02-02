@@ -170,7 +170,10 @@ file_format_label = ttk.Label(file_mover_frame, text="File Format:")
 file_format_label.grid(row=2, column=0, padx=10, pady=5, sticky="e")
 file_format_var = tk.StringVar(file_mover_frame)
 file_format_combobox = ttk.Combobox(file_mover_frame, textvariable=file_format_var, width=20, state="readonly")
-file_format_combobox['values'] = (".ARW", ".JPG", ".PNG", ".JPEG", ".TIFF", "Other")
+file_format_combobox['values'] = (
+    ".ARW", ".JPG", ".PNG", ".JPEG", ".TIFF", ".BMP", ".GIF", ".HEIC", ".ICO", 
+    ".IM", ".MSP", ".PCX", ".PPM", ".SGI", ".SPIDER", ".TGA", ".WEBP", "Other"
+)
 file_format_combobox.grid(row=2, column=1, padx=10, pady=5)
 file_format_combobox.current(0)
 
